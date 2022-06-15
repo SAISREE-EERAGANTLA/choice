@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="e878ee33-8813-40b1-b8d5-bced29b9c955" />
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="fda479bb-f666-4f4f-a8c8-78bc994155de" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="choiceFlow" doc:id="a27a004b-ca64-41a5-9c61-725a4dfe0244" >
+		<http:listener doc:name="Listener" doc:id="6612915d-a0eb-4d21-85cc-6b50a1ddd7f9" config-ref="HTTP_Listener_config1" path="/choice"/>
+		<set-variable value="#[attributes.queryParams.subjectname]" doc:name="Set Variable" doc:id="e645cdb9-0287-45e4-ba30-e5df7273ce85" variableName="subjectname"/>
+		<set-payload value="#[vars.subjectname]" doc:name="Set Payload" doc:id="a81d64a5-18a8-45e6-aaf2-f2fef0f2e996" />
+		<logger level="INFO" doc:name="Logger" doc:id="622d2876-76ff-4486-9f82-c1527b5fd025" message="#[payload]"/>
+		<choice doc:name="Choice" doc:id="2f0e3c9b-b4db-4a17-afaf-2dfdfe93487f" >
+			<when expression="#[payload=='maths']">
+				<set-payload value="value in set payload" doc:name="Set Payload" doc:id="0e036d9b-4105-4636-9245-0bd3fd84446b" />
+			</when>
+			<otherwise >
+				<file:read doc:name="Read" doc:id="d11df4eb-7ff0-4681-895f-3d7b8b0e0038" config-ref="File_Config" path="C:\New folder1\ex2"/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
